@@ -27,6 +27,9 @@ group by engines;
 
 
 3. Show the total number of flights.
+
+
+
 4. Show the total number of flights by airline (carrier).
 5. Show all of the airlines, ordered by number of flights in descending order.
 6. Show only the top 5 airlines, by number of flights, ordered by number of flights in descending order.
