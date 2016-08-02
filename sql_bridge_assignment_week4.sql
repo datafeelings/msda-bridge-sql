@@ -1,14 +1,15 @@
--- Create the schema and tables
+-- Create the schema and the table
 
 DROP SCHEMA IF EXISTS employees;
 
 CREATE SCHEMA `employees`; 
 
--- "hr" is the table for holding employee names and role descriptions:
--- If only employee supervisor name changes, this table
--- does not have to be updated. 
+-- "hr" is the table for holding employee names, role descriptions,
+-- and supervisors.
+-- As the table only holds a direct subordinate-manager relationship 
+-- for each employee, this structure can support any number of hierarchy
+-- levels.
 
--- DROP TABLE IF EXISTS employees.hr;
 
 CREATE TABLE employees.hr (
   id int AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -18,7 +19,10 @@ CREATE TABLE employees.hr (
   manager_id int NULL
 );
 
--- Populate the hr table
+-- Populate the hr table.
+-- It becomes obvious that this table structure introduces
+-- unnecessary data duplication as soon as an employee has multiple
+-- managers.
 
 INSERT INTO employees.hr
 (emp_id, emp_name, role, manager_id)
@@ -33,7 +37,10 @@ VALUES
 (6,'Pavla Stigsson','Assistant',1);
 
 
--- Query the names and relationships
+-- Query the names and employee relationships using a self join.
+-- The resulting table shows a company hierarchy where the CEO
+-- reports to nobody, two VPs report to the CEO, two managers 
+-- report to both VPs, and the assistant reports to the CEO.
 
 
 SELECT hr1.emp_name AS 'Employee', hr1.role AS 'Role', hr2.emp_name AS 'Manager'
