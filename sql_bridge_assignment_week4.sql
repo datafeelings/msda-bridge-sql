@@ -11,62 +11,34 @@ CREATE SCHEMA `employees`;
 -- DROP TABLE IF EXISTS employees.hr;
 
 CREATE TABLE employees.hr (
-  emp_id int AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  id int AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  emp_id int NOT NULL,
   emp_name varchar(30) NOT NULL,
-  role varchar(30) NULL
+  role varchar(30) NULL,
+  manager_id int NULL
 );
 
 -- Populate the hr table
 
 INSERT INTO employees.hr
-(emp_name,role)
+(emp_id, emp_name, role, manager_id)
 VALUES
-('Nima Živković', 'CEO'),
-('Emerald Olsson', 'VP'),
-('Ahmad Wruck', "VP"),
-('Ieremias Piontek', 'Manager'),
-('Abduweli Stawski', 'Manager'),
-('Pavla Stigsson', 'Assistant');
+(1,'Nima Živković','CEO', NULL),
+(2,'Emerald Olsson','VP',1),
+(3,'Ahmad Wruck','VP',1),
+(4,'Ieremias Piontek','Manager',2),
+(4,'Ieremias Piontek','Manager',3),
+(5,'Abduweli Stawski','Manager',2),
+(5,'Abduweli Stawski','Manager',3),
+(6,'Pavla Stigsson','Assistant',1);
 
-
--- "org" is the table for holding hierarchy relationships:
--- To avoid duplicate data and update/delete anomalies, 
--- only employee id and manager id will be stored here.
--- In this way, if employee role or name changes without the impact on 
--- the supervisor, this table does not have to be updated.
-
--- DROP TABLE IF EXISTS employees.org;
-CREATE TABLE employees.org (
-  ID int AUTO_INCREMENT PRIMARY KEY,
-  emp_id int NOT NULL,
-  manager_id int NULL
-);
-
--- Populate the org table
-
-INSERT INTO employees.org
-(emp_id,manager_id)
-VALUES
-(1, NULL),
-(2, 1),
-(3, 1),
-(4, 2),
-(4, 3),
-(5, 2),
-(5, 3),
-(6, 1);
 
 -- Query the names and relationships
 
-SELECT all1.emp_name AS 'Employee', all1.role AS 'Role', all2.emp_name AS 'Manager'
-FROM
-	(SELECT org.emp_id, org.manager_id, hr.emp_name, hr.role
-	FROM employees.org org
-	LEFT JOIN employees.hr hr
-	ON org.emp_id = hr.emp_id) all1 -- table with names and relationships
+
+SELECT hr1.emp_name AS 'Employee', hr1.role AS 'Role', hr2.emp_name AS 'Manager'
+FROM employees.hr hr1
 LEFT JOIN
-	(SELECT org.emp_id, org.manager_id, hr.emp_name, hr.role
-	FROM employees.org org
-	LEFT JOIN employees.hr hr
-	ON org.emp_id = hr.emp_id) all2 -- same table as all1 used to look up manager names
-ON all1.manager_id = all2.emp_id;
+employees.hr hr2 -- self join the same table on manager id
+ON hr1.manager_id = hr2.emp_id
+ORDER BY hr1.emp_id;
