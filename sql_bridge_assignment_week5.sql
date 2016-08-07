@@ -36,7 +36,7 @@ VALUES
 ('Steam', 1),
 ('Wind', 2);
 
--- Join the tables to test the matching of categories to the types
+-- JOIN the tables to test the matching of categories to the types -- SNIPPET 1
 
 SELECT ec.energycategory, et.energytype
 FROM buildingenergy.energytypes et
@@ -79,7 +79,7 @@ VALUES
 (3, 4),
 (3, 5);
 
--- Write a JOIN statement that shows the buildings and associated energy types for each building.
+-- Write a JOIN statement that shows the buildings and associated energy types for each building. -- SNIPPET 2
 
 SELECT b.build_name, e.energytype
 FROM buildingenergy.buildings b
@@ -115,7 +115,7 @@ VALUES
 (5, 1),
 (5, 7);
 
--- Write a SQL query that displays all of the buildings that use Renewable Energies
+-- Write a SQL query that displays all of the buildings that use Renewable Energies -- SNIPPET 3
 
 SELECT b.build_name, e.energytype, c.energycategory
 FROM buildingenergy.buildings b
@@ -125,14 +125,14 @@ JOIN buildingenergy.energytypes e
 ON be.type_id = e.type_id
 JOIN  buildingenergy.energycategories c
 ON e.category_id = c.category_id
-WHERE c.category_id = 2
+WHERE c.category_id = 2 -- Renewable energy category
 ORDER BY b.build_name;
 
---  Write a SQL query that shows the frequency with which energy types are used in various buildings
+--  Write a SQL query that shows the frequency with which energy types are used in various buildings -- Step 4
 
-SELECT e.energytype, count(be.type_id) AS 'count'
+SELECT e.energytype, count(be.type_id) AS 'count' -- count of records
 FROM buildingenergy.buildingsenergytypes be
 JOIN buildingenergy.energytypes e
 ON be.type_id = e.type_id
-GROUP BY e.energytype
+GROUP BY e.energytype -- grouped by energy type
 ORDER BY count(be.type_id) DESC;
